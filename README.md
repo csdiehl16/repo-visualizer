@@ -39,26 +39,40 @@ GITHUB_TOKEN=your_github_personal_access_token_here
 
 ### Usage
 
-1. **Fetch Repository Data**:
+1. **Start the Server**:
+```bash
+npm start
+```
+
+2. **Use the Web Interface**:
+   - Open your browser and go to `http://localhost:3000`
+   - Enter any GitHub repository URL in the input field
+   - Click "Visualize" to generate the interactive tree diagram
+
+### Alternative: Command Line Usage
+
+You can still use the command line tool directly:
 ```bash
 node fetchRepoTree.js https://github.com/owner/repository-name
 ```
-
-2. **View the Visualization**:
-   - Open `public/index.html` in your web browser
-   - Or serve it with a local server:
-```bash
-npx serve public
-```
+Then open `public/index.html` in your browser.
 
 ## How It Works
 
+### Web Interface
+The Express.js server provides:
+- A web form for entering GitHub repository URLs
+- An API endpoint (`/api/fetch-repo`) that handles data fetching
+- Real-time loading indicators and error handling
+- Automatic visualization updates when new data is received
+
 ### Data Fetching
-The `fetchRepoTree.js` script:
-- Parses the GitHub repository URL
+The server-side logic:
+- Parses the GitHub repository URL from the web form
 - Uses GitHub's API to fetch the complete file tree
+- Handles both "main" and "master" branch detection
 - Builds a hierarchical structure with file sizes and extensions
-- Saves the data as `public/tree.json`
+- Returns JSON data to the frontend
 
 ### Visualization
 The D3.js-powered visualization:
@@ -66,6 +80,7 @@ The D3.js-powered visualization:
 - Scales circle sizes logarithmically based on file size (2px - 15px)
 - Colors files by extension using GitHub's language color scheme
 - Displays file names with rotation for readability
+- Updates dynamically when new repositories are loaded
 
 ## Color Coding
 
@@ -90,21 +105,27 @@ Files are colored by their programming language:
 
 ## Examples
 
-Visualize popular repositories:
+Simply enter these URLs in the web interface:
+- `https://github.com/facebook/react`
+- `https://github.com/microsoft/vscode`
+- `https://github.com/nodejs/node`
+- `https://github.com/torvalds/linux`
+- `https://github.com/microsoft/TypeScript`
+
+Or use the command line:
 ```bash
 node fetchRepoTree.js https://github.com/facebook/react
-node fetchRepoTree.js https://github.com/microsoft/vscode
-node fetchRepoTree.js https://github.com/nodejs/node
 ```
 
 ## Project Structure
 
 ```
 repo-visualizer/
-├── fetchRepoTree.js     # GitHub API fetcher
+├── server.js            # Express.js server with API endpoints
+├── fetchRepoTree.js     # Command-line GitHub API fetcher
 ├── public/
-│   ├── index.html       # Main visualization
-│   └── tree.json        # Generated repository data
+│   ├── index.html       # Web interface with form and visualization
+│   └── tree.json        # Generated repository data (optional)
 ├── package.json
 └── README.md
 ```
@@ -133,8 +154,12 @@ MIT License - feel free to use and modify as needed.
 
 ## Troubleshooting
 
+**Server Won't Start**: Make sure you have a valid `GITHUB_TOKEN` in your `.env` file.
+
 **API Rate Limiting**: GitHub API has rate limits. If you hit them, wait an hour or use a different token.
 
-**Large Repositories**: Very large repositories may take longer to fetch and visualize.
+**Large Repositories**: Very large repositories may take longer to fetch and visualize. The web interface shows a loading indicator during processing.
 
 **Browser Performance**: For repositories with thousands of files, the visualization might be slow in older browsers.
+
+**Repository Not Found**: Make sure the GitHub URL is correct and the repository is public.

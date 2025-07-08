@@ -28,146 +28,258 @@
     </head>
     <body>
         <h2 style="text-align: center">Git Repository Structure</h2>
+
+        <!-- Repository URL Input Form -->
+        <div style="text-align: center; margin-bottom: 20px">
+            <form id="repoForm" style="display: inline-block">
+                <input
+                    type="text"
+                    id="repoUrl"
+                    placeholder="Enter GitHub repository URL (e.g., https://github.com/owner/repo)"
+                    style="
+                        width: 400px;
+                        padding: 10px;
+                        font-size: 14px;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        margin-right: 10px;
+                    "
+                    required
+                />
+                <button
+                    type="submit"
+                    style="
+                        padding: 10px 20px;
+                        font-size: 14px;
+                        background-color: #0366d6;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    "
+                >
+                    Visualize
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" style="text-align: center; display: none">
+            <p>Fetching repository data...</p>
+        </div>
+
+        <!-- Error message -->
+        <div
+            id="error"
+            style="text-align: center; color: red; display: none"
+        ></div>
+
         <svg></svg>
 
         <script type="module">
-            const data = await (await fetch("./tree.json")).json();
+            let data = null;
 
-            const width = window.innerWidth;
-            const radius = width / 2;
-
-            // Color mapping for file extensions
-            const languageColors = {
-                js: "#f1e05a",
-                ts: "#3178c6",
-                tsx: "#3178c6",
-                jsx: "#61dafb",
-                html: "#e34c26",
-                css: "#1572b6",
-                json: "#292929",
-                md: "#083fa1",
-                py: "#3572A5",
-                java: "#b07219",
-                cpp: "#f34b7d",
-                c: "#555555",
-                go: "#00ADD8",
-                rs: "#dea584",
-                php: "#4F5D95",
-                rb: "#701516",
-                swift: "#ffac45",
-                kt: "#A97BFF",
-                dart: "#00B4AB",
-                vue: "#41b883",
-                scss: "#c6538c",
-                less: "#1d365d",
-                xml: "#0060ac",
-                yaml: "#cb171e",
-                yml: "#cb171e",
-                toml: "#9c4221",
-                ini: "#d1dae3",
-                conf: "#d1dae3",
-                txt: "#89e051",
-                sql: "#e38c00",
-                sh: "#89e051",
-                bat: "#C1F12E",
-                ps1: "#012456",
-                dockerfile: "#384d54",
-                gitignore: "#f14e32",
-                png: "#a074c4",
-                jpg: "#a074c4",
-                jpeg: "#a074c4",
-                gif: "#a074c4",
-                svg: "#ff9500",
-                ico: "#a074c4",
-                pdf: "#de3f24",
-                default: "#6e7681",
-            };
-
-            function getLanguageColor(extension) {
-                return languageColors[extension] || languageColors.default;
+            // Try to load existing tree.json first
+            try {
+                data = await (await fetch("./tree.json")).json();
+            } catch (error) {
+                console.log(
+                    "No existing tree.json found, waiting for user input",
+                );
             }
 
-            // Create size scale for file sizes
-            const allFiles = [];
-            function collectFiles(node) {
-                if (node.type === "file") {
-                    allFiles.push(node);
-                }
-                if (node.children) {
-                    node.children.forEach(collectFiles);
-                }
-            }
-            collectFiles(data);
+            // Handle form submission
+            document
+                .getElementById("repoForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
 
-            const fileSizes = allFiles.map((f) => f.size).filter((s) => s > 0);
-            const minSize = Math.min(...fileSizes);
-            const maxSize = Math.max(...fileSizes);
+                    const repoUrl = document.getElementById("repoUrl").value;
+                    const loading = document.getElementById("loading");
+                    const error = document.getElementById("error");
+                    const svg = document.querySelector("svg");
 
-            // Scale for circle radius (2px to 15px)
-            const sizeScale = d3
-                .scaleLog()
-                .domain([Math.max(minSize, 1), maxSize])
-                .range([2, 15])
-                .clamp(true);
+                    // Show loading state
+                    loading.style.display = "block";
+                    error.style.display = "none";
+                    svg.innerHTML = ""; // Clear existing visualization
 
-            const tree = d3.tree().size([2 * Math.PI, radius - 100]);
-            const root = tree(d3.hierarchy(data));
+                    try {
+                        const response = await fetch("/api/fetch-repo", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ repoUrl }),
+                        });
 
-            const svg = d3
-                .select("svg")
-                .attr("viewBox", [-radius, -radius, width, width])
-                .style("font", "12px sans-serif");
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(
+                                errorData.error ||
+                                    "Failed to fetch repository data",
+                            );
+                        }
 
-            const link = svg
-                .append("g")
-                .selectAll("path")
-                .data(root.links())
-                .join("path")
-                .attr("class", "link")
-                .attr(
-                    "d",
-                    d3
-                        .linkRadial()
-                        .angle((d) => d.x)
-                        .radius((d) => d.y),
-                );
+                        data = await response.json();
+                        loading.style.display = "none";
 
-            const node = svg
-                .append("g")
-                .selectAll("g")
-                .data(root.descendants())
-                .join("g")
-                .attr(
-                    "transform",
-                    (d) => `
-        rotate(${(d.x * 180) / Math.PI - 90})
-        translate(${d.y},0)
-      `,
-                );
-
-            node.append("circle")
-                .attr("r", (d) => {
-                    if (d.children) return 4; // Directory
-                    return d.data.size > 0 ? sizeScale(d.data.size) : 2; // File
-                })
-                .attr("fill", (d) => {
-                    if (d.children) return "#555"; // Directory
-                    return getLanguageColor(d.data.extension);
+                        // Create visualization with new data
+                        createVisualization(data);
+                    } catch (err) {
+                        loading.style.display = "none";
+                        error.style.display = "block";
+                        error.textContent = `Error: ${err.message}`;
+                    }
                 });
 
-            node.append("text")
-                .attr("dy", "0.31em")
-                .attr("x", (d) => (d.x < Math.PI === !d.children ? 6 : -6))
-                .attr("text-anchor", (d) =>
-                    d.x < Math.PI === !d.children ? "start" : "end",
-                )
-                .attr("transform", (d) =>
-                    d.x >= Math.PI ? "rotate(180)" : null,
-                )
-                .text((d) => d.data.name)
-                .clone(true)
-                .lower()
-                .attr("stroke", "white");
+            // Function to create the visualization
+            function createVisualization(data) {
+                if (!data) return;
+
+                const width = window.innerWidth;
+                const radius = width / 2;
+
+                // Color mapping for file extensions
+                const languageColors = {
+                    js: "#f1e05a",
+                    ts: "#3178c6",
+                    tsx: "#3178c6",
+                    jsx: "#61dafb",
+                    html: "#e34c26",
+                    css: "#1572b6",
+                    json: "#292929",
+                    md: "#083fa1",
+                    py: "#3572A5",
+                    java: "#b07219",
+                    cpp: "#f34b7d",
+                    c: "#555555",
+                    go: "#00ADD8",
+                    rs: "#dea584",
+                    php: "#4F5D95",
+                    rb: "#701516",
+                    swift: "#ffac45",
+                    kt: "#A97BFF",
+                    dart: "#00B4AB",
+                    vue: "#41b883",
+                    scss: "#c6538c",
+                    less: "#1d365d",
+                    xml: "#0060ac",
+                    yaml: "#cb171e",
+                    yml: "#cb171e",
+                    toml: "#9c4221",
+                    ini: "#d1dae3",
+                    conf: "#d1dae3",
+                    txt: "#89e051",
+                    sql: "#e38c00",
+                    sh: "#89e051",
+                    bat: "#C1F12E",
+                    ps1: "#012456",
+                    dockerfile: "#384d54",
+                    gitignore: "#f14e32",
+                    png: "#a074c4",
+                    jpg: "#a074c4",
+                    jpeg: "#a074c4",
+                    gif: "#a074c4",
+                    svg: "#ff9500",
+                    ico: "#a074c4",
+                    pdf: "#de3f24",
+                    default: "#6e7681",
+                };
+
+                function getLanguageColor(extension) {
+                    return languageColors[extension] || languageColors.default;
+                }
+
+                // Create size scale for file sizes
+                const allFiles = [];
+                function collectFiles(node) {
+                    if (node.type === "file") {
+                        allFiles.push(node);
+                    }
+                    if (node.children) {
+                        node.children.forEach(collectFiles);
+                    }
+                }
+                collectFiles(data);
+
+                const fileSizes = allFiles
+                    .map((f) => f.size)
+                    .filter((s) => s > 0);
+                const minSize = Math.min(...fileSizes);
+                const maxSize = Math.max(...fileSizes);
+
+                // Scale for circle radius (2px to 15px)
+                const sizeScale = d3
+                    .scaleLog()
+                    .domain([Math.max(minSize, 1), maxSize])
+                    .range([2, 15])
+                    .clamp(true);
+
+                const tree = d3.tree().size([2 * Math.PI, radius - 100]);
+                const root = tree(d3.hierarchy(data));
+
+                const svg = d3
+                    .select("svg")
+                    .attr("viewBox", [-radius, -radius, width, width])
+                    .style("font", "12px sans-serif");
+
+                const link = svg
+                    .append("g")
+                    .selectAll("path")
+                    .data(root.links())
+                    .join("path")
+                    .attr("class", "link")
+                    .attr(
+                        "d",
+                        d3
+                            .linkRadial()
+                            .angle((d) => d.x)
+                            .radius((d) => d.y),
+                    );
+
+                const node = svg
+                    .append("g")
+                    .selectAll("g")
+                    .data(root.descendants())
+                    .join("g")
+                    .attr(
+                        "transform",
+                        (d) => `
+            rotate(${(d.x * 180) / Math.PI - 90})
+            translate(${d.y},0)
+          `,
+                    );
+
+                node.append("circle")
+                    .attr("r", (d) => {
+                        if (d.children) return 4; // Directory
+                        return d.data.size > 0 ? sizeScale(d.data.size) : 2; // File
+                    })
+                    .attr("fill", (d) => {
+                        if (d.children) return "#555"; // Directory
+                        return getLanguageColor(d.data.extension);
+                    });
+
+                node.append("text")
+                    .attr("dy", "0.31em")
+                    .attr("x", (d) => (d.x < Math.PI === !d.children ? 6 : -6))
+                    .attr("text-anchor", (d) =>
+                        d.x < Math.PI === !d.children ? "start" : "end",
+                    )
+                    .attr("transform", (d) =>
+                        d.x >= Math.PI ? "rotate(180)" : null,
+                    )
+                    .text((d) => d.data.name)
+                    .clone(true)
+                    .lower()
+                    .attr("stroke", "white");
+            }
+
+            // Create initial visualization if data exists
+            if (data) {
+                createVisualization(data);
+            }
         </script>
 
         <!-- Legend -->
