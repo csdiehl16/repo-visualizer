@@ -1,0 +1,368 @@
+{
+  "name": "/",
+  "children": [
+    {
+      "name": ".eslintrc.json",
+      "type": "file",
+      "size": 40,
+      "extension": "json"
+    },
+    {
+      "name": ".gitignore",
+      "type": "file",
+      "size": 391,
+      "extension": "gitignore"
+    },
+    {
+      "name": "README.md",
+      "type": "file",
+      "size": 1477,
+      "extension": "md"
+    },
+    {
+      "name": "ai_file_upload.png",
+      "type": "file",
+      "size": 171096,
+      "extension": "png"
+    },
+    {
+      "name": "ai_scatter_example.png",
+      "type": "file",
+      "size": 250480,
+      "extension": "png"
+    },
+    {
+      "name": "cors.json",
+      "type": "file",
+      "size": 82,
+      "extension": "json"
+    },
+    {
+      "name": "exampleData",
+      "type": "file",
+      "size": 0,
+      "extension": "exampleData",
+      "children": [
+        {
+          "name": "Cars.db",
+          "type": "file",
+          "size": 36864,
+          "extension": "db"
+        },
+        {
+          "name": "cars.csv",
+          "type": "file",
+          "size": 22983,
+          "extension": "csv"
+        },
+        {
+          "name": "disaster_data.json",
+          "type": "file",
+          "size": 208193,
+          "extension": "json"
+        },
+        {
+          "name": "gapminder.csv",
+          "type": "file",
+          "size": 7102,
+          "extension": "csv"
+        },
+        {
+          "name": "titanic.db",
+          "type": "file",
+          "size": 73728,
+          "extension": "db"
+        }
+      ]
+    },
+    {
+      "name": "next.config.mjs",
+      "type": "file",
+      "size": 138,
+      "extension": "mjs"
+    },
+    {
+      "name": "package.json",
+      "type": "file",
+      "size": 875,
+      "extension": "json"
+    },
+    {
+      "name": "pnpm-lock.yaml",
+      "type": "file",
+      "size": 171474,
+      "extension": "yaml"
+    },
+    {
+      "name": "public",
+      "type": "file",
+      "size": 0,
+      "extension": "public",
+      "children": [
+        {
+          "name": "hero.png",
+          "type": "file",
+          "size": 155999,
+          "extension": "png"
+        },
+        {
+          "name": "icons",
+          "type": "file",
+          "size": 0,
+          "extension": "icons",
+          "children": [
+            {
+              "name": "repeat.svg",
+              "type": "file",
+              "size": 688,
+              "extension": "svg"
+            },
+            {
+              "name": "upload.svg",
+              "type": "file",
+              "size": 651,
+              "extension": "svg"
+            },
+            {
+              "name": "xmark.svg",
+              "type": "file",
+              "size": 510,
+              "extension": "svg"
+            }
+          ]
+        },
+        {
+          "name": "next.svg",
+          "type": "file",
+          "size": 1375,
+          "extension": "svg"
+        },
+        {
+          "name": "vercel.svg",
+          "type": "file",
+          "size": 629,
+          "extension": "svg"
+        }
+      ]
+    },
+    {
+      "name": "src",
+      "type": "file",
+      "size": 0,
+      "extension": "src",
+      "children": [
+        {
+          "name": "app",
+          "type": "file",
+          "size": 0,
+          "extension": "app",
+          "children": [
+            {
+              "name": "action.tsx",
+              "type": "file",
+              "size": 11659,
+              "extension": "tsx"
+            },
+            {
+              "name": "context.tsx",
+              "type": "file",
+              "size": 556,
+              "extension": "tsx"
+            },
+            {
+              "name": "favicon.ico",
+              "type": "file",
+              "size": 25931,
+              "extension": "ico"
+            },
+            {
+              "name": "globals.css",
+              "type": "file",
+              "size": 2206,
+              "extension": "css"
+            },
+            {
+              "name": "layout.tsx",
+              "type": "file",
+              "size": 763,
+              "extension": "tsx"
+            },
+            {
+              "name": "login",
+              "type": "file",
+              "size": 0,
+              "extension": "login",
+              "children": [
+                {
+                  "name": "page.tsx",
+                  "type": "file",
+                  "size": 3417,
+                  "extension": "tsx"
+                }
+              ]
+            },
+            {
+              "name": "page.tsx",
+              "type": "file",
+              "size": 9665,
+              "extension": "tsx"
+            }
+          ]
+        },
+        {
+          "name": "components",
+          "type": "file",
+          "size": 0,
+          "extension": "components",
+          "children": [
+            {
+              "name": "BarChart.tsx",
+              "type": "file",
+              "size": 1551,
+              "extension": "tsx"
+            },
+            {
+              "name": "Chart.tsx",
+              "type": "file",
+              "size": 3224,
+              "extension": "tsx"
+            },
+            {
+              "name": "Controls.tsx",
+              "type": "file",
+              "size": 1979,
+              "extension": "tsx"
+            },
+            {
+              "name": "Description.tsx",
+              "type": "file",
+              "size": 1871,
+              "extension": "tsx"
+            },
+            {
+              "name": "FileInput.tsx",
+              "type": "file",
+              "size": 1938,
+              "extension": "tsx"
+            },
+            {
+              "name": "FileList.tsx",
+              "type": "file",
+              "size": 2058,
+              "extension": "tsx"
+            },
+            {
+              "name": "Profile.tsx",
+              "type": "file",
+              "size": 832,
+              "extension": "tsx"
+            },
+            {
+              "name": "Table.tsx",
+              "type": "file",
+              "size": 2254,
+              "extension": "tsx"
+            },
+            {
+              "name": "TimeChart.tsx",
+              "type": "file",
+              "size": 2444,
+              "extension": "tsx"
+            },
+            {
+              "name": "UploadForm.tsx",
+              "type": "file",
+              "size": 2206,
+              "extension": "tsx"
+            },
+            {
+              "name": "settings.ts",
+              "type": "file",
+              "size": 33,
+              "extension": "ts"
+            },
+            {
+              "name": "styles.tsx",
+              "type": "file",
+              "size": 1553,
+              "extension": "tsx"
+            }
+          ]
+        },
+        {
+          "name": "firebase",
+          "type": "file",
+          "size": 0,
+          "extension": "firebase",
+          "children": [
+            {
+              "name": "config.js",
+              "type": "file",
+              "size": 1413,
+              "extension": "js"
+            },
+            {
+              "name": "database.js",
+              "type": "file",
+              "size": 1133,
+              "extension": "js"
+            },
+            {
+              "name": "storage.js",
+              "type": "file",
+              "size": 1583,
+              "extension": "js"
+            },
+            {
+              "name": "useAuth.js",
+              "type": "file",
+              "size": 513,
+              "extension": "js"
+            }
+          ]
+        },
+        {
+          "name": "lib",
+          "type": "file",
+          "size": 0,
+          "extension": "lib",
+          "children": [
+            {
+              "name": "registry.tsx",
+              "type": "file",
+              "size": 863,
+              "extension": "tsx"
+            },
+            {
+              "name": "utils",
+              "type": "file",
+              "size": 0,
+              "extension": "utils",
+              "children": [
+                {
+                  "name": "index.ts",
+                  "type": "file",
+                  "size": 3231,
+                  "extension": "ts"
+                },
+                {
+                  "name": "tool-definition.ts",
+                  "type": "file",
+                  "size": 1611,
+                  "extension": "ts"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tsconfig.json",
+      "type": "file",
+      "size": 578,
+      "extension": "json"
+    }
+  ],
+  "size": 596631
+}
